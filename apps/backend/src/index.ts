@@ -5,6 +5,7 @@ import { defaultGameState, gameStateSchema } from 'common';
 const peerServer = PeerServer({
 	port: 9000,
 	path: '/proximity',
+	alive_timeout: Infinity,
 });
 
 const state = writable(gameStateSchema, {
