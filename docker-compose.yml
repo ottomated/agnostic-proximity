@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - AUTH_TOKEN=${AUTH_TOKEN}
-      - PUBLIC_BACKEND_HOST=backend.${HOST}
-      - PUBLIC_BACKEND_PORT=80
+      - PUBLIC_BACKEND_HOST=backend-${HOST}
+      - PUBLIC_BACKEND_PORT=443
       - PUBLIC_TURN_IP=${IP}
       - ORIGIN=https://${HOST}
     command: [ "pnpm", "start:frontend" ]
@@ -22,20 +22,28 @@ services:
       - AUTH_TOKEN=${AUTH_TOKEN}
     command: [ "pnpm", "start:backend" ]
   turn:
-    image: coturn/coturn:4.6.1-alpine
+    image: ghcr.io/processone/eturnal:latest
     network_mode: host
-    command:
-      [
-        "-a",
-        "-u",
-        "coturn:${AUTH_TOKEN}",
-        "-r",
-        "proximity",
-        "-X",
-        "${IP}"
-      ]
-    volumes:
-      - ./coturn.conf:/etc/coturn/turnserver.conf:ro
+    hostname: eturnal
+    container_name: eturnal
+    restart: unless-stopped
+    environment:
+      ETURNAL_SECRET: ${AUTH_TOKEN}
+  # turn:
+  #   image: coturn/coturn:4.6.1-alpine
+  #   network_mode: host
+  #   command:
+  #     [
+  #       "-a",
+  #       "-u",
+  #       "coturn:${AUTH_TOKEN}",
+  #       "-r",
+  #       "proximity",
+  #       "-X",
+  #       "${IP}"
+  #     ]
+  #   volumes:
+  #     - ./coturn.conf:/etc/coturn/turnserver.conf:ro
   nginx:
     image: nginx:1.23.3-alpine
     environment:

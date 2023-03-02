@@ -5,14 +5,39 @@ import { writable } from 'svelte/store';
 import { storedWritable } from './stores';
 
 export const myId = storedWritable('playerId', () => crypto.randomUUID());
+export const gameState = writable<GameState>({
+	players: [],
+	falloffDistance: 10,
+});
 
-export function createPeer(id: string, token: string) {
+export async function createPeer(id: string, token: string) {
 	let ws: WebSocket | undefined;
 
-	const gameState = writable<GameState>({
-		players: [],
-		falloffDistance: 10,
-	});
+	const expires = Date.now() + 1000 * 60 * 60 * 24;
+
+	const signature = await crypto.subtle.sign(
+		{
+			name: 'HMAC',
+			hash: 'SHA-1',
+		},
+		await crypto.subtle.importKey(
+			'raw',
+			new TextEncoder().encode(token),
+			{
+				name: 'HMAC',
+				hash: 'SHA-1',
+			},
+			false,
+			['sign', 'verify']
+		),
+		new TextEncoder().encode(expires.toString())
+	);
+	// base64
+	const signatureString = btoa(
+		String.fromCharCode(...new Uint8Array(signature))
+	);
+
+	console.log(expires, signatureString);
 
 	const peer = new Peer(id, {
 		host: env.PUBLIC_BACKEND_HOST,
@@ -21,11 +46,11 @@ export function createPeer(id: string, token: string) {
 		path: '/proximity',
 		config: {
 			iceServers: [
-				{ urls: 'stun:stun.l.google.com:19302' },
+				// { urls: 'stun:stun.l.google.com:19302' },
 				{
 					urls: `turn:${env.PUBLIC_TURN_IP}:3478`,
-					username: 'coturn',
-					credential: token,
+					username: expires.toString(),
+					credential: signatureString,
 				},
 			],
 		},
@@ -46,5 +71,5 @@ export function createPeer(id: string, token: string) {
 			}
 		});
 	});
-	return [peer, gameState] as const;
+	return peer;
 }

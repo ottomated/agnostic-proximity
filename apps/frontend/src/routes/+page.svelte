@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { createPeer, myId } from '$lib/socket';
+	import { createPeer, gameState, myId } from '$lib/socket';
 	import Player from '$lib/Player.svelte';
 	import {
 		audioAllowed,
@@ -14,7 +14,7 @@
 
 	export let data: PageData;
 
-	const [peer, gameState] = createPeer($myId, data.token);
+	const peerPromise = createPeer($myId, data.token);
 
 	const audio = new AudioContext();
 	const micPromise = getMicrophone(audio);
@@ -42,13 +42,15 @@
 	{:then mic}
 		{#if $audioAllowed}
 			<ul class="list-disc">
-				{#each $gameState.players as player (player.id)}
-					{#if player.id === $myId}
-						<MyPlayer {player} {audio} />
-					{:else}
-						<Player {peer} {gameState} {player} mic={mic.stream} {audio} />
-					{/if}
-				{/each}
+				{#await peerPromise then peer}
+					{#each $gameState.players as player (player.id)}
+						{#if player.id === $myId}
+							<MyPlayer {player} {audio} />
+						{:else}
+							<Player {peer} {gameState} {player} mic={mic.stream} {audio} />
+						{/if}
+					{/each}
+				{/await}
 			</ul>
 		{:else}
 			<button>Click to connect</button>
