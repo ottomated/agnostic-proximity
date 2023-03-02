@@ -1,0 +1,9 @@
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"strict": true,
+		"alwaysStrict": true,
+		"noUncheckedIndexedAccess": true,
+		"allowSyntheticDefaultImports": true
+	}
+}
