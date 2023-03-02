@@ -18,7 +18,7 @@
 	const mousePos = { x: 0, y: 0 };
 
 	const socket = new WebSocket(
-		'ws://backend.localhost/proximity/peerjs?key=pass&id=admin&token=token&version=1.4.7'
+		'wss://backend-proximity.mogultv.org/proximity/peerjs?key=pass&id=admin&token=token&version=1.4.7'
 	);
 	setInterval(() => {
 		socket.send('{"type":"HEARTBEAT"}');

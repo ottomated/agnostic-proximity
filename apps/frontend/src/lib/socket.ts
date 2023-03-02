@@ -23,7 +23,7 @@ export function createPeer(id: string, token: string) {
 			iceServers: [
 				{ urls: 'stun:stun.l.google.com:19302' },
 				{
-					urls: `turn:${env.PUBLIC_BACKEND_HOST}:80`,
+					urls: `turn:${env.PUBLIC_TURN_IP}:3478`,
 					username: 'coturn',
 					credential: token,
 				},

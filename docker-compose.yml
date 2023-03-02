@@ -8,6 +8,7 @@ services:
       - AUTH_TOKEN=${AUTH_TOKEN}
       - PUBLIC_BACKEND_HOST=backend.${HOST}
       - PUBLIC_BACKEND_PORT=80
+      - PUBLIC_TURN_IP=${IP}
       - ORIGIN=https://${HOST}
     command: [ "pnpm", "start:frontend" ]
     depends_on:
@@ -29,7 +30,9 @@ services:
         "-u",
         "coturn:${AUTH_TOKEN}",
         "-r",
-        "proximity"
+        "proximity",
+        "-X",
+        "${IP}"
       ]
     volumes:
       - ./coturn.conf:/etc/coturn/turnserver.conf:ro
