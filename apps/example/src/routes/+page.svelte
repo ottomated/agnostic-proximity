@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-  import { onMount } from "svelte";
+	import { onMount } from 'svelte';
 	import type { GameState } from 'common';
 
 	type Player = {
@@ -8,7 +8,7 @@
 		y: number;
 		a: number;
 		color: string;
-	}
+	};
 
 	let players: Player[] = [];
 	let selectedPlayer = 0;
@@ -17,7 +17,9 @@
 	const justPressedKeys = new Set<string>();
 	const mousePos = { x: 0, y: 0 };
 
-	const socket = new WebSocket('ws://localhost:9000/proximity/peerjs?key=peerjs&id=admin&token=token&version=1.4.7');
+	const socket = new WebSocket(
+		'ws://backend.localhost/proximity/peerjs?key=pass&id=admin&token=token&version=1.4.7'
+	);
 	setInterval(() => {
 		socket.send('{"type":"HEARTBEAT"}');
 	}, 30 * 1000);
@@ -64,20 +66,22 @@
 				players[selectedPlayer] = player;
 			}
 
-			socket.send(JSON.stringify({
-				GameState: {
-					players: players.map((p, i) => ({
-						id: i.toString(),
-						position: [p.x, 0, p.y],
-						rotation: eulerToQuaternion(0, p.a + Math.PI / 2, 0),
-						volume: 1,
-					})),
-					falloffDistance: 100,
-				} satisfies GameState
-			}));
+			socket.send(
+				JSON.stringify({
+					GameState: {
+						players: players.map((p, i) => ({
+							id: i.toString(),
+							position: [p.x, 0, p.y],
+							rotation: eulerToQuaternion(0, p.a + Math.PI / 2, 0),
+							volume: 1,
+						})),
+						falloffDistance: 100,
+					} satisfies GameState,
+				})
+			);
 
 			justPressedKeys.clear();
-		}
+		};
 		let raf = requestAnimationFrame(tick);
 		return () => cancelAnimationFrame(raf);
 	});
@@ -97,16 +101,15 @@
 			c1 * s2 * c3 - s1 * c2 * s3,
 		] as [number, number, number, number];
 	}
-
 </script>
 
 <svelte:window
-	on:keydown={e => {
+	on:keydown={(e) => {
 		pressedKeys.add(e.key);
 		justPressedKeys.add(e.key);
 	}}
-	on:keyup={e => pressedKeys.delete(e.key)}
-	on:mousemove={e => {
+	on:keyup={(e) => pressedKeys.delete(e.key)}
+	on:mousemove={(e) => {
 		mousePos.x = e.clientX;
 		mousePos.y = e.clientY;
 	}}
@@ -121,7 +124,9 @@
 			class="absolute rounded-full w-4 h-4 -top-2 -left-2 outline-2 outline"
 		>
 			<span
-				style:transform="translate({Math.cos(player.a) * 10}px, {Math.sin(player.a) * 10}px)"
+				style:transform="translate({Math.cos(player.a) * 10}px, {Math.sin(
+					player.a
+				) * 10}px)"
 				class="absolute w-2 h-2 top-1 left-1 bg-white rounded-full"
 			/>
 		</span>

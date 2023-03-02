@@ -1,0 +1,51 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - AUTH_TOKEN=${AUTH_TOKEN}
+      - PUBLIC_BACKEND_HOST=backend.${HOST}
+      - PUBLIC_BACKEND_PORT=80
+      - ORIGIN=https://${HOST}
+    command: [ "pnpm", "start:frontend" ]
+    depends_on:
+      - backend
+      - turn
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - AUTH_TOKEN=${AUTH_TOKEN}
+    command: [ "pnpm", "start:backend" ]
+  turn:
+    image: coturn/coturn:4.6.1-alpine
+    network_mode: host
+    command:
+      [
+        "-a",
+        "-u",
+        "coturn:${AUTH_TOKEN}",
+        "-r",
+        "proximity"
+      ]
+    volumes:
+      - ./coturn.conf:/etc/coturn/turnserver.conf:ro
+  nginx:
+    image: nginx:1.23.3-alpine
+    environment:
+      - NGINX_ENVSUBST_TEMPLATE_SUFFIX=.conf
+      - SERVER_NAME=${HOST}
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.conf:ro
+      - type: tmpfs
+        target: /var/lib/coturn
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - frontend
+      - backend

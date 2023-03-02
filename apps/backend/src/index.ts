@@ -6,6 +6,7 @@ const peerServer = PeerServer({
 	port: 9000,
 	path: '/proximity',
 	alive_timeout: Infinity,
+	key: process.env.AUTH_TOKEN,
 });
 
 const state = writable(gameStateSchema, {
