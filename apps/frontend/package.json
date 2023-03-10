@@ -12,7 +12,7 @@
 	},
 	"dependencies": {
 		"@fontsource/inter": "^4.5.15",
-		"@tanstack/svelte-query": "^4.24.4",
+		"@tanstack/svelte-query": "^4.24.10",
 		"common": "workspace:*",
 		"devalue": "^4.3.0",
 		"lucide-svelte": "^0.115.0",

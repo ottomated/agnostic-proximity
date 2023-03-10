@@ -71,6 +71,7 @@
 					GameState: {
 						players: players.map((p, i) => ({
 							id: i.toString(),
+							name: i.toString(),
 							position: [p.x, 0, p.y],
 							rotation: eulerToQuaternion(0, p.a + Math.PI / 2, 0),
 							volume: 1,

@@ -8,7 +8,7 @@ services:
       - AUTH_TOKEN=${AUTH_TOKEN}
       - PUBLIC_BACKEND_HOST=backend-${HOST}
       - PUBLIC_BACKEND_PORT=443
-      - PUBLIC_TURN_IP=${IP}
+      - PUBLIC_TURN_IP=turn.${HOST}
       - ORIGIN=https://${HOST}
     command: [ "pnpm", "start:frontend" ]
     depends_on:

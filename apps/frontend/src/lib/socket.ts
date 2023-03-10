@@ -4,15 +4,9 @@ import Peer from 'peerjs';
 import { writable } from 'svelte/store';
 import { storedWritable } from './stores';
 
-export const myId = storedWritable('playerId', () => crypto.randomUUID());
-export const gameState = writable<GameState>({
-	players: [],
-	falloffDistance: 10,
-});
+export const myId = storedWritable<string>('playerId', '');
 
 export async function createPeer(id: string, token: string) {
-	let ws: WebSocket | undefined;
-
 	const expires = Date.now() + 1000 * 60 * 60 * 24;
 
 	const signature = await crypto.subtle.sign(
@@ -32,12 +26,15 @@ export async function createPeer(id: string, token: string) {
 		),
 		new TextEncoder().encode(expires.toString())
 	);
+
+	const gameState = writable<GameState>({
+		players: [],
+		falloffDistance: 10,
+	});
 	// base64
 	const signatureString = btoa(
 		String.fromCharCode(...new Uint8Array(signature))
 	);
-
-	console.log(expires, signatureString);
 
 	const peer = new Peer(id, {
 		host: env.PUBLIC_BACKEND_HOST,
@@ -56,9 +53,13 @@ export async function createPeer(id: string, token: string) {
 		},
 	});
 
-	peer.socket.once('message', () => {
+	let ws: WebSocket | undefined;
+
+	const onMessage = () => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		ws = (peer.socket as any)._socket as WebSocket;
+		ws = (peer.socket as any)._socket as WebSocket | undefined;
+		if (!ws) return;
+		peer.socket.off('message', onMessage);
 
 		ws.addEventListener('message', (event) => {
 			try {
@@ -70,6 +71,7 @@ export async function createPeer(id: string, token: string) {
 				console.error(e);
 			}
 		});
-	});
-	return peer;
+	};
+	peer.socket.on('message', onMessage);
+	return [peer, gameState] as const;
 }

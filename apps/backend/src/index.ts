@@ -21,6 +21,20 @@ state.subscribe((state) => {
 	});
 });
 
+peerServer.get('/users', (req, res) => {
+	if (req.header('Authorization') !== process.env.AUTH_TOKEN) {
+		res.status(401).send('Unauthorized');
+		return;
+	}
+	const { GameState } = state.get();
+	const players = GameState.players.map((player) => ({
+		id: player.id,
+		name: player.name,
+	}));
+	res.header('Content-Type', 'application/json');
+	res.send(JSON.stringify(players));
+});
+
 peerServer.on('connection', (client) => {
 	const ws = client.getSocket();
 	if (!ws) return;

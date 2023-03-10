@@ -4,7 +4,8 @@ export const gameStateSchema =  z.object({
   GameState: z.object({
     players: z.array(
       z.object({
-        id: z.string(),
+				id: z.string(),
+				name: z.string(),
         position: z.tuple([z.number(), z.number(), z.number()]),
         rotation: z.tuple([z.number(), z.number(), z.number(), z.number()]),
         volume: z.number(),
