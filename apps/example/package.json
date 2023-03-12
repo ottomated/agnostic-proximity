@@ -6,8 +6,6 @@
 	},
 	"scripts": {
 		"dev": "vite dev --port 9001",
-		"build": "vite build",
-		"preview": "vite preview",
 		"lint": "eslint --fix . && svelte-check"
 	},
 	"dependencies": {
