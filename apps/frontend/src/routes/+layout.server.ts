@@ -1,9 +1,7 @@
-import type { LayoutServerLoad } from './$types';
-
 export const ssr = false;
 export const prerender = false;
 
-export const load: LayoutServerLoad = async ({ locals }) => {
+export const load = async ({ locals }) => {
 	return {
 		token: locals.token,
 	};

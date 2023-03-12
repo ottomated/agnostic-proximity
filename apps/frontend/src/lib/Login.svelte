@@ -3,12 +3,16 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { myId } from './socket';
 
+	export let token: string;
+
 	const users = createQuery({
 		queryKey: ['users'],
 		queryFn: () =>
-			fetch(`${env.PUBLIC_BACKEND_HOST}/users`).then(
-				(res) => res.json() as Promise<{ id: string; name: string }[]>
-			),
+			fetch(`https://${env.PUBLIC_BACKEND_HOST}/users`, {
+				headers: {
+					Authorization: token,
+				},
+			}).then((res) => res.json() as Promise<{ id: string; name: string }[]>),
 	});
 </script>
 

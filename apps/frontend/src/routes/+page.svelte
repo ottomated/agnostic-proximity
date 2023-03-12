@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { createPeer, myId } from '$lib/socket';
 	import { createQuery } from '@tanstack/svelte-query';
-	import type { GameState } from 'common';
-	import type Peer from 'peerjs';
-	import type { Writable } from 'svelte/store';
-	import type { PageData } from './$types';
 	import Chat from './Chat.svelte';
 
-	export let data: PageData;
+	export let data;
 
 	const peer = createQuery({
 		queryKey: ['peer'],

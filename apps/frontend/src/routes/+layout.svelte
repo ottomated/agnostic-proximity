@@ -4,6 +4,8 @@
 	import { myId } from '$lib/socket';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 
+	export let data;
+
 	const client = new QueryClient();
 </script>
 
@@ -11,6 +13,6 @@
 	{#if $myId}
 		<slot />
 	{:else}
-		<Login />
+		<Login token={data.token} />
 	{/if}
 </QueryClientProvider>
