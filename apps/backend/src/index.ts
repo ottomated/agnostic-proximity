@@ -1,6 +1,7 @@
 import { PeerServer } from 'peer';
 import { writable } from './store';
 import { defaultGameState, gameStateSchema } from 'common';
+import type { WebSocket } from 'ws';
 
 const peerServer = PeerServer({
 	port: 9000,
@@ -13,7 +14,7 @@ const state = writable(gameStateSchema, {
 	GameState: defaultGameState,
 });
 
-const clients: { send: (v: string) => void }[] = [];
+const clients = new Set<WebSocket>();
 
 state.subscribe((state) => {
 	clients.forEach((client) => {
@@ -38,8 +39,9 @@ peerServer.get('/users', (req, res) => {
 peerServer.on('connection', (client) => {
 	const ws = client.getSocket();
 	if (!ws) return;
-	clients.push(ws);
+	clients.add(ws);
 	ws.addEventListener('message', (event) => {
+		if (typeof event.data !== 'string') return;
 		try {
 			const data = JSON.parse(event.data);
 			if (data.GameState) {
@@ -55,9 +57,7 @@ peerServer.on('connection', (client) => {
 peerServer.on('disconnect', (client) => {
 	const ws = client.getSocket();
 	if (!ws) return;
-	const index = clients.indexOf(ws);
-	if (index === -1) return;
-	clients.splice(index, 1);
+	clients.delete(ws);
 });
 
-console.log('Listening');
+console.log('Backend listening on 0.0.0.0:9000');

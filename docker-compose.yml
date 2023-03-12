@@ -4,13 +4,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        app: frontend
     environment:
       - AUTH_TOKEN=${AUTH_TOKEN}
       - PUBLIC_BACKEND_HOST=backend-${HOST}
       - PUBLIC_BACKEND_PORT=443
       - PUBLIC_TURN_HOST=turn-${HOST}
       - ORIGIN=https://${HOST}
-    command: [ "pnpm", "start:frontend" ]
     depends_on:
       - backend
       - turn
@@ -18,9 +19,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        app: backend
     environment:
       - AUTH_TOKEN=${AUTH_TOKEN}
-    command: [ "pnpm", "start:backend" ]
   turn:
     image: ghcr.io/processone/eturnal:latest
     network_mode: host
