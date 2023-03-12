@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { PUBLIC_BACKEND_HOST } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { myId } from './socket';
 
 	const users = createQuery({
 		queryKey: ['users'],
 		queryFn: () =>
-			fetch(`${PUBLIC_BACKEND_HOST}/users`).then(
+			fetch(`${env.PUBLIC_BACKEND_HOST}/users`).then(
 				(res) => res.json() as Promise<{ id: string; name: string }[]>
 			),
 	});
