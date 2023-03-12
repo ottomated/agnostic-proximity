@@ -45,7 +45,7 @@ export async function createPeer(id: string, token: string) {
 			iceServers: [
 				// { urls: 'stun:stun.l.google.com:19302' },
 				{
-					urls: `turn:${env.PUBLIC_TURN_IP}:3478`,
+					urls: `turn:${env.PUBLIC_TURN_HOST}:3478`,
 					username: expires.toString(),
 					credential: signatureString,
 				},

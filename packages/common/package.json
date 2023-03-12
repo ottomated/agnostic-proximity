@@ -4,6 +4,6 @@
   "types": "src/index.ts",
   "type": "module",
   "dependencies": {
-    "zod": "^3.20.6"
+    "zod": "^3.21.4"
   }
 }
