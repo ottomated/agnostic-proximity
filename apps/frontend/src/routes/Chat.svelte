@@ -12,8 +12,8 @@
 	import type { Writable } from 'svelte/store';
 	import Player from '$lib/Player.svelte';
 	import MyPlayer from '$lib/MyPlayer.svelte';
+	import { myId } from '$lib/socket';
 
-	export let myId: string;
 	export let peer: Peer;
 	export let gameState: Writable<GameState>;
 
@@ -44,7 +44,7 @@
 		{#if $audioAllowed}
 			<ul class="list-disc">
 				{#each $gameState.players as player (player.id)}
-					{#if player.id === myId}
+					{#if player.id === $myId}
 						<MyPlayer {player} {audio} />
 					{:else}
 						<Player {peer} {gameState} {player} mic={mic.stream} {audio} />
@@ -69,4 +69,5 @@
 			Deafen
 		</label>
 	</div>
+	<button on:click={() => ($myId = '')}>Change user</button>
 </main>

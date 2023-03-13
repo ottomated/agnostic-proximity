@@ -1,29 +1,48 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { env } from '$env/dynamic/public';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { myId } from './socket';
 
 	export let token: string;
 
+	const protocol = dev ? 'http' : 'https';
+
 	const users = createQuery({
 		queryKey: ['users'],
-		queryFn: () =>
-			fetch(`https://${env.PUBLIC_BACKEND_HOST}/users`, {
-				headers: {
-					Authorization: token,
-				},
-			}).then((res) => res.json() as Promise<{ id: string; name: string }[]>),
+		queryFn: async () => {
+			const res = await fetch(
+				`${protocol}://${env.PUBLIC_BACKEND_HOST}:${env.PUBLIC_BACKEND_PORT}/users`,
+				{
+					headers: {
+						Authorization: token,
+					},
+				}
+			);
+			if (!res.ok) {
+				throw new Error(await res.text());
+			}
+			return res.json() as Promise<{ id: string; name: string }[]>;
+		},
 	});
 </script>
 
 <main
-	class="bg-slate-900 text-red-100 h-screen flex flex-col items-center justify-center"
+	class="bg-slate-900 text-red-100 h-screen flex flex-col items-center justify-center gap-2"
 >
-	{JSON.stringify($users.data)}
-	<button
-		on:click={() => ($myId = crypto.randomUUID())}
-		class="bg-slate-500 text-white p-2 rounded"
-	>
-		Login
-	</button>
+	{#if $users.isLoading}
+		<p>Loading...</p>
+	{:else if $users.isError}
+		<p>Error: {$users.error}</p>
+	{:else}
+		<p>Who are you?</p>
+		{#each $users.data as user}
+			<button
+				on:click={() => ($myId = user.id)}
+				class="bg-slate-500 text-white p-2 rounded"
+			>
+				{user.name}
+			</button>
+		{/each}
+	{/if}
 </main>

@@ -12,5 +12,5 @@
 </script>
 
 {#if $peer.isSuccess}
-	<Chat myId={$myId} peer={$peer.data[0]} gameState={$peer.data[1]} />
+	<Chat peer={$peer.data[0]} gameState={$peer.data[1]} />
 {/if}

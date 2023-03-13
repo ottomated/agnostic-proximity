@@ -3,11 +3,16 @@ import { writable } from './store';
 import { defaultGameState, gameStateSchema } from 'common';
 import type { WebSocket } from 'ws';
 
+const authToken = process.env.AUTH_TOKEN ?? 'pass';
+if (!process.env.AUTH_TOKEN) {
+	console.warn('No AUTH_TOKEN set, using "pass"');
+}
+
 const peerServer = PeerServer({
 	port: 9000,
 	path: '/proximity',
 	alive_timeout: Infinity,
-	key: process.env.AUTH_TOKEN,
+	key: authToken,
 });
 
 const state = writable(gameStateSchema, {
@@ -30,7 +35,7 @@ peerServer.use((_, res, next) => {
 });
 
 peerServer.get('/users', (req, res) => {
-	if (req.header('Authorization') !== process.env.AUTH_TOKEN) {
+	if (req.header('Authorization') !== authToken) {
 		res.status(401).send('Unauthorized');
 		return;
 	}

@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import type { GameState } from 'common';
+	import { PUBLIC_HOST, PUBLIC_TOKEN } from '$env/static/public';
 
 	type Player = {
 		x: number;
@@ -17,8 +18,11 @@
 	const justPressedKeys = new Set<string>();
 	const mousePos = { x: 0, y: 0 };
 
+	const host = `wss://backend-${PUBLIC_HOST}`;
+	// const host = 'ws://localhost:9000';
+
 	const socket = new WebSocket(
-		'wss://backend-proximity.mogultv.org/proximity/peerjs?key=pass&id=admin&token=token&version=1.4.7'
+		`${host}/proximity/peerjs?key=${PUBLIC_TOKEN}&id=admin&token=token&version=1.4.7`
 	);
 	setInterval(() => {
 		socket.send('{"type":"HEARTBEAT"}');
@@ -71,7 +75,7 @@
 					GameState: {
 						players: players.map((p, i) => ({
 							id: i.toString(),
-							name: i.toString(),
+							name: `Player ${i}`,
 							position: [p.x, 0, p.y],
 							rotation: eulerToQuaternion(0, p.a + Math.PI / 2, 0),
 							volume: 1,
