@@ -23,7 +23,7 @@
 <script lang="ts">
 	import type { MediaConnection, Peer } from 'peerjs';
 
-	import { onDestroy, SvelteComponentTyped } from 'svelte';
+	import { onDestroy, onMount, SvelteComponentTyped } from 'svelte';
 	import { audioSettings, closeStream } from './audio';
 	import type { GameState, Player } from 'common';
 	import type { Writable } from 'svelte/store';
@@ -61,13 +61,15 @@
 	}
 	let state: CallState = 'waiting';
 
-	peer.on('call', onCall);
-	setTimeout(() => {
-		if (call) return;
-		state = 'calling';
-		call = peer.call(player.id, mic);
-		setupCall();
-	}, 500);
+	onMount(() => {
+		peer.on('call', onCall);
+		setTimeout(() => {
+			if (call) return;
+			state = 'calling';
+			call = peer.call(player.id, mic);
+			setupCall();
+		}, 500);
+	});
 
 	function onStream(s: MediaStream) {
 		stream = s;
