@@ -22,6 +22,13 @@ state.subscribe((state) => {
 	});
 });
 
+peerServer.use((_, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', 'Authorization');
+	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+	next();
+});
+
 peerServer.get('/users', (req, res) => {
 	if (req.header('Authorization') !== process.env.AUTH_TOKEN) {
 		res.status(401).send('Unauthorized');
