@@ -71,7 +71,6 @@
 
 	function onStream(s: MediaStream) {
 		stream = s;
-		document.body.appendChild(audioElement);
 		audioElement.muted = true;
 		audioElement.srcObject = stream;
 		audioElement.play();
