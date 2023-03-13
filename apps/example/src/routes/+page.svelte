@@ -51,18 +51,19 @@
 				addPlayer();
 			}
 			const player = players[selectedPlayer];
+			const speed = 20;
 			if (player) {
 				if (pressedKeys.has('w')) {
-					player.y -= 5;
+					player.y -= speed;
 				}
 				if (pressedKeys.has('s')) {
-					player.y += 5;
+					player.y += speed;
 				}
 				if (pressedKeys.has('a')) {
-					player.x -= 5;
+					player.x -= speed;
 				}
 				if (pressedKeys.has('d')) {
-					player.x += 5;
+					player.x += speed;
 				}
 				player.a = Math.atan2(mousePos.y - player.y, mousePos.x - player.x);
 				players[selectedPlayer] = player;
