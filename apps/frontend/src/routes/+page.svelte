@@ -5,12 +5,9 @@
 
 	export let data;
 
-	const peer = createQuery({
-		queryKey: ['peer'],
-		queryFn: () => createPeer($myId, data.token),
-	});
+	const peerPromise = createPeer($myId, data.token);
 </script>
 
-{#if $peer.isSuccess}
-	<Chat peer={$peer.data[0]} gameState={$peer.data[1]} />
-{/if}
+{#await peerPromise then [peer, gameState]}
+	<Chat {peer} {gameState} />
+{/await}

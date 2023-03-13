@@ -41,9 +41,7 @@
 	addPlayer();
 
 	onMount(() => {
-		const tick = () => {
-			raf = requestAnimationFrame(tick);
-
+		const interval = setInterval(() => {
 			for (let i = 0; i < players.length; i++) {
 				if (justPressedKeys.has((i + 1).toString())) {
 					selectedPlayer = i;
@@ -86,9 +84,8 @@
 			);
 
 			justPressedKeys.clear();
-		};
-		let raf = requestAnimationFrame(tick);
-		return () => cancelAnimationFrame(raf);
+		}, 1000 / 15);
+		return () => clearInterval(interval);
 	});
 
 	function eulerToQuaternion(x: number, y: number, z: number) {
