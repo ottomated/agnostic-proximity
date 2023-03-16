@@ -80,7 +80,7 @@
 		// node.connect(audio.destination);
 		panner = audio.createPanner();
 		panner.panningModel = 'HRTF';
-		panner.distanceModel = 'inverse';
+		panner.distanceModel = 'linear';
 		panner.refDistance = 20;
 		panner.coneInnerAngle = 360;
 		panner.coneOuterAngle = 0;
@@ -105,7 +105,7 @@
 	$: if (panner) panner.maxDistance = $gameState.falloffDistance;
 
 	$: gain?.gain.setValueAtTime(
-		$audioSettings.deafened ? 0 : player.volume * 3,
+		$audioSettings.deafened ? 0 : player.volume * 2.5,
 		audio.currentTime
 	);
 
