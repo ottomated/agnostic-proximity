@@ -10,6 +10,7 @@
 
 	const users = createQuery({
 		queryKey: ['users'],
+		refetchInterval: 1000,
 		queryFn: async () => {
 			const res = await fetch(
 				`${protocol}://${env.PUBLIC_BACKEND_HOST}:${env.PUBLIC_BACKEND_PORT}/users`,
