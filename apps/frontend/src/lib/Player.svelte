@@ -79,7 +79,7 @@
 		node = audio.createMediaStreamSource(stream);
 		// node.connect(audio.destination);
 		panner = audio.createPanner();
-		panner.panningModel = 'equalpower';
+		panner.panningModel = 'HRTF';
 		panner.distanceModel = 'linear';
 		gain = audio.createGain();
 		node.connect(panner);
