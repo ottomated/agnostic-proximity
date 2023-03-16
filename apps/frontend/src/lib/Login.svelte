@@ -31,7 +31,7 @@
 	class="bg-slate-900 text-red-100 h-screen flex flex-col items-center justify-center gap-2"
 >
 	{#if $users.isLoading}
-		<p>Loading...</p>
+		<p>Loading users...</p>
 	{:else if $users.isError}
 		<p>Error: {$users.error}</p>
 	{:else}
