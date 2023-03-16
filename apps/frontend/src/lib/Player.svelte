@@ -80,7 +80,12 @@
 		// node.connect(audio.destination);
 		panner = audio.createPanner();
 		panner.panningModel = 'HRTF';
-		panner.distanceModel = 'linear';
+		panner.distanceModel = 'inverse';
+		panner.refDistance = 1;
+		panner.coneInnerAngle = 360;
+		panner.coneOuterAngle = 0;
+		panner.coneOuterGain = 0;
+
 		gain = audio.createGain();
 		node.connect(panner);
 		panner.connect(gain);
