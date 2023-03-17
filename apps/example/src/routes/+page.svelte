@@ -75,11 +75,18 @@
 						players: players.map((p, i) => ({
 							id: i.toString(),
 							name: `Player ${i}`,
-							position: [p.x, 0, p.y],
+							position: { x: p.x, y: 0, z: p.y },
 							rotation: eulerToQuaternion(0, p.a + Math.PI / 2, 0),
 							volume: 1,
 						})),
-						falloffDistance: 100,
+						audioSettings: {
+							refDistance: 20,
+							maxDistance: 100,
+							rolloffFactor: 1,
+							coneInnerAngle: 360,
+							coneOuterAngle: 0,
+							coneOuterGain: 0,
+						},
 					} satisfies GameState,
 				})
 			);
@@ -97,12 +104,12 @@
 		const s2 = Math.sin(z / 2);
 		const s3 = Math.sin(x / 2);
 
-		return [
-			c1 * c2 * c3 - s1 * s2 * s3,
-			s1 * s2 * c3 + c1 * c2 * s3,
-			s1 * c2 * c3 + c1 * s2 * s3,
-			c1 * s2 * c3 - s1 * c2 * s3,
-		] as [number, number, number, number];
+		return {
+			x: c1 * c2 * c3 - s1 * s2 * s3,
+			y: s1 * s2 * c3 + c1 * c2 * s3,
+			z: s1 * c2 * c3 + c1 * s2 * s3,
+			w: c1 * s2 * c3 - s1 * c2 * s3,
+		};
 	}
 </script>
 

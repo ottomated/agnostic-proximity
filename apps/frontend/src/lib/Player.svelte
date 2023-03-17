@@ -111,12 +111,15 @@
 	$: panner?.positionX.setValueAtTime(pos.x, audio.currentTime);
 	$: panner?.positionY.setValueAtTime(pos.y, audio.currentTime);
 	$: panner?.positionZ.setValueAtTime(pos.z, audio.currentTime);
-	$: if (panner) panner.maxDistance = $gameState.maxDistance;
-	$: if (panner) panner.refDistance = $gameState.refDistance;
-	$: if (panner) panner.rolloffFactor = $gameState.rolloffFactor;
-	$: if (panner) panner.coneInnerAngle = $gameState.coneInnerAngle;
-	$: if (panner) panner.coneOuterAngle = $gameState.coneOuterAngle;
-	$: if (panner) panner.coneOuterGain = $gameState.coneOuterGain;
+
+	$: settings = $gameState.audioSettings;
+	$: console.log(settings);
+	$: if (panner) panner.maxDistance = settings.maxDistance;
+	$: if (panner) panner.refDistance = settings.refDistance;
+	$: if (panner) panner.rolloffFactor = settings.rolloffFactor;
+	$: if (panner) panner.coneInnerAngle = settings.coneInnerAngle;
+	$: if (panner) panner.coneOuterAngle = settings.coneOuterAngle;
+	$: if (panner) panner.coneOuterGain = settings.coneOuterGain;
 
 	$: gain?.gain.setValueAtTime(
 		$audioSettings.deafened ? 0 : player.volume * 2.5,
