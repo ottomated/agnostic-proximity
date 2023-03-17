@@ -27,7 +27,7 @@
 	import { audioSettings, closeStream } from './audio';
 	import type { GameState, Player } from 'common';
 	import type { Writable } from 'svelte/store';
-	import { getVectors, rotateVectorByQuat } from './MyPlayer.svelte';
+	import { rotateVectorByQuat } from './MyPlayer.svelte';
 
 	export let gameState: Writable<GameState>;
 	export let peer: Peer;
