@@ -110,17 +110,17 @@
 	let panner: PannerNode | undefined;
 	let gain: GainNode | undefined;
 
-	const forward = { x: 1, y: 0, z: 0 };
+	const forward = { x: 0, y: 0, z: 1 };
 	$: if (panner) {
 		const pos = player.position;
 		const rot = rotateVectorByQuat(forward, player.rotation);
-		panner.positionX.setValueAtTime(pos.x, audio.currentTime);
-		panner.positionY.setValueAtTime(pos.y, audio.currentTime);
-		panner.positionZ.setValueAtTime(pos.z, audio.currentTime);
-		console.log(rot);
-		panner.orientationX.setValueAtTime(rot.x, audio.currentTime);
-		panner.orientationY.setValueAtTime(rot.y, audio.currentTime);
-		panner.orientationZ.setValueAtTime(rot.z, audio.currentTime);
+		const now = audio.currentTime +;
+		panner.positionX.setValueAtTime(pos.x, now);
+		panner.positionY.setValueAtTime(pos.y, now);
+		panner.positionZ.setValueAtTime(pos.z, now);
+		panner.orientationX.setValueAtTime(rot.x, now);
+		panner.orientationY.setValueAtTime(rot.y, now);
+		panner.orientationZ.setValueAtTime(rot.z, now);
 	}
 
 	$: settings = $gameState.audioSettings;

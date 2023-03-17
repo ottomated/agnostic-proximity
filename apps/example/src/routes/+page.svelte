@@ -83,16 +83,16 @@
 							refDistance: 20,
 							maxDistance: 100,
 							rolloffFactor: 1,
-							coneInnerAngle: 45,
-							coneOuterAngle: 90,
-							coneOuterGain: 0,
+							coneInnerAngle: 90,
+							coneOuterAngle: 180,
+							coneOuterGain: 0.3,
 						},
 					} satisfies GameState,
 				})
 			);
 
 			justPressedKeys.clear();
-		}, 1000 / 15);
+		}, 1000 / 30);
 		return () => clearInterval(interval);
 	});
 
