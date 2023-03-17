@@ -27,6 +27,7 @@
 	import { audioSettings, closeStream } from './audio';
 	import type { GameState, Player } from 'common';
 	import type { Writable } from 'svelte/store';
+	import { getVectors, rotateVectorByQuat } from './MyPlayer.svelte';
 
 	export let gameState: Writable<GameState>;
 	export let peer: Peer;
@@ -90,6 +91,7 @@
 		audioElement.play();
 		// node = audio.createMediaStreamSource(stream);
 		const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
+		osc.start();
 		// node.connect(audio.destination);
 		panner = audio.createPanner();
 		panner.panningModel = 'HRTF';
@@ -108,13 +110,20 @@
 	let panner: PannerNode | undefined;
 	let gain: GainNode | undefined;
 
-	$: pos = player.position;
-	$: panner?.positionX.setValueAtTime(pos.x, audio.currentTime);
-	$: panner?.positionY.setValueAtTime(pos.y, audio.currentTime);
-	$: panner?.positionZ.setValueAtTime(pos.z, audio.currentTime);
+	const forward = { x: 1, y: 0, z: 0 };
+	$: if (panner) {
+		const pos = player.position;
+		const rot = rotateVectorByQuat(forward, player.rotation);
+		panner.positionX.setValueAtTime(pos.x, audio.currentTime);
+		panner.positionY.setValueAtTime(pos.y, audio.currentTime);
+		panner.positionZ.setValueAtTime(pos.z, audio.currentTime);
+		console.log(rot);
+		panner.orientationX.setValueAtTime(rot.x, audio.currentTime);
+		panner.orientationY.setValueAtTime(rot.y, audio.currentTime);
+		panner.orientationZ.setValueAtTime(rot.z, audio.currentTime);
+	}
 
 	$: settings = $gameState.audioSettings;
-	$: console.log(settings);
 	$: if (panner) panner.maxDistance = settings.maxDistance;
 	$: if (panner) panner.refDistance = settings.refDistance;
 	$: if (panner) panner.rolloffFactor = settings.rolloffFactor;

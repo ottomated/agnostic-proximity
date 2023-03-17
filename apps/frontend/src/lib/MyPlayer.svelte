@@ -6,12 +6,12 @@
 	 * @param quat The quaternion to convert
 	 * @returns An array of 6 numbers, representing the forward and up vectors
 	 */
-	function getVectors(quat: Quaternion): [Vector, Vector] {
+	export function getVectors(quat: Quaternion): [Vector, Vector] {
 		const forward = rotateVectorByQuat({ x: 0, y: 0, z: -1 }, quat);
 		const up = rotateVectorByQuat({ x: 0, y: 1, z: 0 }, quat);
 		return [forward, up];
 	}
-	function rotateVectorByQuat(vec: Vector, quat: Quaternion): Vector {
+	export function rotateVectorByQuat(vec: Vector, quat: Quaternion): Vector {
 		const s = quat.w;
 
 		const dot1 = dot(quat, vec);
@@ -78,11 +78,9 @@
 				);
 		  };
 
-	$: pos = player.position;
-	$: setPosition(pos);
+	$: setPosition(player.position);
 
-	$: rot = player.rotation;
-	$: setOrientation(rot);
+	$: setOrientation(player.rotation);
 </script>
 
 <li class="flex items-center gap-2">
