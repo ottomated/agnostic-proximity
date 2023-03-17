@@ -1,47 +1,37 @@
 <script lang="ts" context="module">
+	type Vector = { x: number; y: number; z: number };
+	type Quaternion = { x: number; y: number; z: number; w: number };
 	/**
 	 *
 	 * @param quat The quaternion to convert
 	 * @returns An array of 6 numbers, representing the forward and up vectors
 	 */
-	function getVectors(
-		quat: [number, number, number, number]
-	): [number, number, number, number, number, number] {
-		const forward = rotateVectorByQuat([0, 0, -1], quat);
-		const up = rotateVectorByQuat([0, 1, 0], quat);
-		return [...forward, ...up];
+	function getVectors(quat: Quaternion): [Vector, Vector] {
+		const forward = rotateVectorByQuat({ x: 0, y: 0, z: -1 }, quat);
+		const up = rotateVectorByQuat({ x: 0, y: 1, z: 0 }, quat);
+		return [forward, up];
 	}
-	function rotateVectorByQuat(
-		vec: [number, number, number],
-		quat: [number, number, number, number]
-	): [number, number, number] {
-		const u = [quat[0], quat[1], quat[2]] as [number, number, number];
-		const s = quat[3];
+	function rotateVectorByQuat(vec: Vector, quat: Quaternion): Vector {
+		const s = quat.w;
 
-		const dot1 = dot(u, vec);
-		const dot2 = dot(u, u);
-		const cross1 = cross(u, vec);
-		const x = 2 * dot1 * u[0] + (s * s - dot2) * vec[0] + 2 * s * cross1[0];
-		const y = 2 * dot1 * u[1] + (s * s - dot2) * vec[1] + 2 * s * cross1[1];
-		const z = 2 * dot1 * u[2] + (s * s - dot2) * vec[2] + 2 * s * cross1[2];
-		return [x, y, z];
+		const dot1 = dot(quat, vec);
+		const dot2 = dot(quat, quat);
+		const cross1 = cross(quat, vec);
+		const x = 2 * dot1 * quat.x + (s * s - dot2) * vec.x + 2 * s * cross1.x;
+		const y = 2 * dot1 * quat.y + (s * s - dot2) * vec.y + 2 * s * cross1.y;
+		const z = 2 * dot1 * quat.z + (s * s - dot2) * vec.z + 2 * s * cross1.z;
+		return { x, y, z };
 	}
 
-	function dot(
-		vec1: [number, number, number],
-		vec2: [number, number, number]
-	): number {
-		return vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2];
+	function dot(vec1: Vector, vec2: Vector): number {
+		return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	}
-	function cross(
-		vec1: [number, number, number],
-		vec2: [number, number, number]
-	): [number, number, number] {
-		return [
-			vec1[1] * vec2[2] - vec1[2] * vec2[1],
-			vec1[2] * vec2[0] - vec1[0] * vec2[2],
-			vec1[0] * vec2[1] - vec1[1] * vec2[0],
-		];
+	function cross(vec1: Vector, vec2: Vector): Vector {
+		return {
+			x: vec1.y * vec2.z - vec1.z * vec2.y,
+			y: vec1.z * vec2.x - vec1.x * vec2.z,
+			z: vec1.x * vec2.y - vec1.y * vec2.x,
+		};
 	}
 </script>
 
@@ -55,30 +45,37 @@
 	const isModern = 'positionX' in AudioListener.prototype;
 
 	const setPosition = isModern
-		? (pos: [number, number, number]) => {
+		? (pos: Vector) => {
 				const now = audio.currentTime;
-				audio.listener.positionX.setValueAtTime(pos[0], now);
-				audio.listener.positionY.setValueAtTime(pos[1], now);
-				audio.listener.positionZ.setValueAtTime(pos[2], now);
+				audio.listener.positionX.setValueAtTime(pos.x, now);
+				audio.listener.positionY.setValueAtTime(pos.y, now);
+				audio.listener.positionZ.setValueAtTime(pos.z, now);
 		  }
-		: (pos: [number, number, number]) => {
-				audio.listener.setPosition(pos[0], pos[1], pos[2]);
+		: (pos: Vector) => {
+				audio.listener.setPosition(pos.x, pos.y, pos.z);
 		  };
 
 	const setOrientation = isModern
-		? (quat: [number, number, number, number]) => {
+		? (quat: Quaternion) => {
 				const now = audio.currentTime;
-				const vec = getVectors(quat);
-				audio.listener.forwardX.setValueAtTime(vec[0], now);
-				audio.listener.forwardY.setValueAtTime(vec[1], now);
-				audio.listener.forwardZ.setValueAtTime(vec[2], now);
-				audio.listener.upX.setValueAtTime(vec[3], now);
-				audio.listener.upY.setValueAtTime(vec[4], now);
-				audio.listener.upZ.setValueAtTime(vec[5], now);
+				const [forward, up] = getVectors(quat);
+				audio.listener.forwardX.setValueAtTime(forward.x, now);
+				audio.listener.forwardY.setValueAtTime(forward.y, now);
+				audio.listener.forwardZ.setValueAtTime(forward.z, now);
+				audio.listener.upX.setValueAtTime(up.x, now);
+				audio.listener.upY.setValueAtTime(up.y, now);
+				audio.listener.upZ.setValueAtTime(up.z, now);
 		  }
-		: (quat: [number, number, number, number]) => {
+		: (quat: Quaternion) => {
 				const vec = getVectors(quat);
-				audio.listener.setOrientation(...vec);
+				audio.listener.setOrientation(
+					vec[0].x,
+					vec[0].y,
+					vec[0].z,
+					vec[1].x,
+					vec[1].y,
+					vec[1].z
+				);
 		  };
 
 	$: pos = player.position;

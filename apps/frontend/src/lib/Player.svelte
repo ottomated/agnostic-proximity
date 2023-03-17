@@ -93,10 +93,6 @@
 		panner = audio.createPanner();
 		panner.panningModel = 'HRTF';
 		panner.distanceModel = 'linear';
-		panner.refDistance = 20;
-		panner.coneInnerAngle = 360;
-		panner.coneOuterAngle = 0;
-		panner.coneOuterGain = 0;
 
 		gain = audio.createGain();
 		node.connect(panner);
@@ -111,10 +107,16 @@
 	let panner: PannerNode | undefined;
 	let gain: GainNode | undefined;
 
-	$: panner?.positionX.setValueAtTime(player.position[0], audio.currentTime);
-	$: panner?.positionY.setValueAtTime(player.position[1], audio.currentTime);
-	$: panner?.positionZ.setValueAtTime(player.position[2], audio.currentTime);
-	$: if (panner) panner.maxDistance = $gameState.falloffDistance;
+	$: pos = player.position;
+	$: panner?.positionX.setValueAtTime(pos.x, audio.currentTime);
+	$: panner?.positionY.setValueAtTime(pos.y, audio.currentTime);
+	$: panner?.positionZ.setValueAtTime(pos.z, audio.currentTime);
+	$: if (panner) panner.maxDistance = $gameState.maxDistance;
+	$: if (panner) panner.refDistance = $gameState.refDistance;
+	$: if (panner) panner.rolloffFactor = $gameState.rolloffFactor;
+	$: if (panner) panner.coneInnerAngle = $gameState.coneInnerAngle;
+	$: if (panner) panner.coneOuterAngle = $gameState.coneOuterAngle;
+	$: if (panner) panner.coneOuterGain = $gameState.coneOuterGain;
 
 	$: gain?.gain.setValueAtTime(
 		$audioSettings.deafened ? 0 : player.volume * 2.5,
