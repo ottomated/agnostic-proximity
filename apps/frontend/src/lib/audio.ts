@@ -29,7 +29,7 @@ export function setStreamEnabled(
 function canAutoplay() {
 	const el = document.createElement('audio');
 	el.setAttribute('playsinline', 'playsinline');
-	el.src = '/_app/immutable/a.wav';
+	el.src = '/_app/immutable/a.mp3';
 	return new Promise<boolean>((resolve) => {
 		const playResult = el.play();
 		const timeout = setTimeout(() => {

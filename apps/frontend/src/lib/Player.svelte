@@ -62,6 +62,9 @@
 	let state: CallState = 'waiting';
 
 	onMount(() => {
+		peer.on('error', console.warn);
+		peer.on('close', console.warn);
+		peer.on('disconnected', console.warn);
 		peer.on('call', onCall);
 		setTimeout(() => {
 			if (call) return;
