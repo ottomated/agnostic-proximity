@@ -38,6 +38,15 @@
 
 	function setupCall() {
 		if (!call) return;
+		call.on('error', (e) => {
+			console.error('call error', e);
+		});
+		call.on('iceStateChanged', (state) => {
+			console.log('ice state changed', state);
+		});
+		call.on('close', () => {
+			console.log('call closed');
+		});
 		call.on('close', () => {
 			state = 'closed';
 			destroy();
