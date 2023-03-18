@@ -114,7 +114,7 @@
 	$: if (panner) {
 		const pos = player.position;
 		const rot = rotateVectorByQuat(forward, player.rotation);
-		const now = audio.currentTime +;
+		const now = audio.currentTime;
 		panner.positionX.setValueAtTime(pos.x, now);
 		panner.positionY.setValueAtTime(pos.y, now);
 		panner.positionZ.setValueAtTime(pos.z, now);
@@ -141,7 +141,7 @@
 		closeStream(stream);
 		node?.disconnect();
 		panner?.disconnect();
-		audioElement.srcObject = null;
+		if (audioElement) audioElement.srcObject = null;
 		call = undefined;
 		stream = undefined;
 		node = undefined;
