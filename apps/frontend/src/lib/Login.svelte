@@ -37,6 +37,9 @@
 		<p>Error: {$users.error}</p>
 	{:else}
 		<p>Who are you?</p>
+		{#if $users.data.length === 0}
+			<p class="italic text-slate-300">No users found</p>
+		{/if}
 		{#each $users.data as user}
 			<button
 				on:click={() => ($myId = user.id)}
