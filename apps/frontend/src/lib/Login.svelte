@@ -29,17 +29,16 @@
 </script>
 
 <main
-	class="bg-slate-900 text-red-100 h-screen flex flex-col items-center justify-center gap-2"
+	class="bg-slate-900 h-screen flex flex-col items-center justify-center gap-2"
 >
 	{#if $users.isLoading}
-		<p>Loading users...</p>
+		<p class="italic">Loading users...</p>
 	{:else if $users.isError}
-		<p>Error: {$users.error}</p>
+		<p class="text-red-100">Error: {$users.error}</p>
+	{:else if $users.data.length === 0}
+		<p class="italic">Waiting for game to start...</p>
 	{:else}
 		<p>Who are you?</p>
-		{#if $users.data.length === 0}
-			<p class="italic text-slate-300">No users found</p>
-		{/if}
 		{#each $users.data as user}
 			<button
 				on:click={() => ($myId = user.id)}
