@@ -157,5 +157,5 @@
 
 <li class="flex items-center gap-2">
 	<svelte:component this={iconMap[state][1]} class={iconMap[state][0]} />
-	{player.id}
+	{player.name}
 </li>
