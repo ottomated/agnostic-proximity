@@ -148,9 +148,15 @@
 				Math.pow(player.position.y - me.position.y, 2) +
 				Math.pow(player.position.z - me.position.z, 2)
 		);
-		const distanceRamp = Math.min(
-			1,
-			Math.max(0, (distance - settings.refDistance) / settings.maxDistance)
+		// ramp from 1 to 0 as it goes from refDistance to maxDistance
+		const distanceRamp = Math.max(
+			0,
+			Math.min(
+				1,
+				1 -
+					(distance - settings.refDistance) /
+						(settings.maxDistance - settings.refDistance)
+			)
 		);
 		gain?.gain.setValueAtTime(
 			$audioSettings.deafened ? 0 : player.volume * distanceRamp,
