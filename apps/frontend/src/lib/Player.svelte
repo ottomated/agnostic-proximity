@@ -90,14 +90,14 @@
 		audioElement.srcObject = stream;
 		audioElement.play();
 		node = audio.createMediaStreamSource(stream);
-		// const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
-		// osc.start();
+		const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
+		osc.start();
 		panner = audio.createPanner();
 		panner.panningModel = 'HRTF';
 		panner.distanceModel = 'linear';
 
 		gain = audio.createGain();
-		node.connect(panner);
+		osc.connect(panner);
 		panner.connect(gain);
 		gain.connect(audio.destination);
 		state = 'connected';
