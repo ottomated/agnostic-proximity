@@ -42,7 +42,7 @@
 		{#each $users.data as user}
 			<button
 				on:click={() => ($myId = user.id)}
-				class="bg-slate-500 text-white p-2 rounded"
+				class="bg-slate-500 text-white px-2 py-1 rounded"
 			>
 				{user.name}
 			</button>
