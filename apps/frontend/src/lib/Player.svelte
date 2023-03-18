@@ -113,13 +113,13 @@
 	$: if (panner) {
 		const pos = player.position;
 		const rot = rotateVectorByQuat(forward, player.rotation);
-		const now = audio.currentTime;
-		panner.positionX.setValueAtTime(pos.x, now);
-		panner.positionY.setValueAtTime(pos.y, now);
-		panner.positionZ.setValueAtTime(pos.z, now);
-		panner.orientationX.setValueAtTime(rot.x, now);
-		panner.orientationY.setValueAtTime(rot.y, now);
-		panner.orientationZ.setValueAtTime(rot.z, now);
+		const now = audio.currentTime + 0.1;
+		panner.positionX.linearRampToValueAtTime(pos.x, now);
+		panner.positionY.linearRampToValueAtTime(pos.y, now);
+		panner.positionZ.linearRampToValueAtTime(pos.z, now);
+		panner.orientationX.linearRampToValueAtTime(rot.x, now);
+		panner.orientationY.linearRampToValueAtTime(rot.y, now);
+		panner.orientationZ.linearRampToValueAtTime(rot.z, now);
 	}
 
 	$: settings = $gameState.audioSettings;

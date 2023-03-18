@@ -48,10 +48,10 @@
 
 	const setPosition = isModern
 		? (pos: Vector) => {
-				const now = audio.currentTime;
-				audio.listener.positionX.setValueAtTime(pos.x, now);
-				audio.listener.positionY.setValueAtTime(pos.y, now);
-				audio.listener.positionZ.setValueAtTime(pos.z, now);
+				const now = audio.currentTime + 0.1;
+				audio.listener.positionX.linearRampToValueAtTime(pos.x, now);
+				audio.listener.positionY.linearRampToValueAtTime(pos.y, now);
+				audio.listener.positionZ.linearRampToValueAtTime(pos.z, now);
 		  }
 		: (pos: Vector) => {
 				audio.listener.setPosition(pos.x, pos.y, pos.z);
@@ -59,14 +59,14 @@
 
 	const setOrientation = isModern
 		? (quat: Quaternion) => {
-				const now = audio.currentTime;
+				const now = audio.currentTime + 0.1;
 				const [forward, up] = getVectors(quat);
-				audio.listener.forwardX.setValueAtTime(forward.x, now);
-				audio.listener.forwardY.setValueAtTime(forward.y, now);
-				audio.listener.forwardZ.setValueAtTime(forward.z, now);
-				audio.listener.upX.setValueAtTime(up.x, now);
-				audio.listener.upY.setValueAtTime(up.y, now);
-				audio.listener.upZ.setValueAtTime(up.z, now);
+				audio.listener.forwardX.linearRampToValueAtTime(forward.x, now);
+				audio.listener.forwardY.linearRampToValueAtTime(forward.y, now);
+				audio.listener.forwardZ.linearRampToValueAtTime(forward.z, now);
+				audio.listener.upX.linearRampToValueAtTime(up.x, now);
+				audio.listener.upY.linearRampToValueAtTime(up.y, now);
+				audio.listener.upZ.linearRampToValueAtTime(up.z, now);
 		  }
 		: (quat: Quaternion) => {
 				const vec = getVectors(quat);
