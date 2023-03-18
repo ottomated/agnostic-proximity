@@ -6,9 +6,11 @@
 	 * @param quat The quaternion to convert
 	 * @returns An array of 6 numbers, representing the forward and up vectors
 	 */
+	const f = { x: 0, y: 0, z: -1 };
+	const u = { x: 0, y: 1, z: 0 };
 	export function getVectors(quat: Quaternion): [Vector, Vector] {
-		const forward = rotateVectorByQuat({ x: 0, y: 0, z: -1 }, quat);
-		const up = rotateVectorByQuat({ x: 0, y: 1, z: 0 }, quat);
+		const forward = rotateVectorByQuat(f, quat);
+		const up = rotateVectorByQuat(u, quat);
 		return [forward, up];
 	}
 	export function rotateVectorByQuat(vec: Vector, quat: Quaternion): Vector {

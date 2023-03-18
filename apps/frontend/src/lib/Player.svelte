@@ -89,16 +89,15 @@
 		audioElement.muted = true;
 		audioElement.srcObject = stream;
 		audioElement.play();
-		// node = audio.createMediaStreamSource(stream);
-		const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
-		osc.start();
-		// node.connect(audio.destination);
+		node = audio.createMediaStreamSource(stream);
+		// const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
+		// osc.start();
 		panner = audio.createPanner();
 		panner.panningModel = 'HRTF';
 		panner.distanceModel = 'linear';
 
 		gain = audio.createGain();
-		osc.connect(panner);
+		node.connect(panner);
 		panner.connect(gain);
 		gain.connect(audio.destination);
 		state = 'connected';
