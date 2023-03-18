@@ -131,7 +131,7 @@
 	$: if (panner) panner.coneOuterGain = settings.coneOuterGain;
 
 	$: gain?.gain.setValueAtTime(
-		$audioSettings.deafened ? 0 : player.volume * 2.5,
+		$audioSettings.deafened ? 0 : player.volume * settings.staticGainMultiplier,
 		audio.currentTime
 	);
 

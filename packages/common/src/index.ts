@@ -27,6 +27,7 @@ export const gameStateSchema =  z.object({
 			coneInnerAngle: z.number().min(0).max(360),
 			coneOuterAngle: z.number().min(0).max(360),
 			coneOuterGain: z.number().min(0).max(1),
+			staticGainMultiplier: z.number().min(0),
 		}),
 	}),
 });
@@ -39,6 +40,7 @@ export const defaultGameState = {
 		coneInnerAngle: 360,
 		coneOuterAngle: 0,
 		coneOuterGain: 0,
+		staticGainMultiplier: 1,
 	},
 } satisfies GameState;
 

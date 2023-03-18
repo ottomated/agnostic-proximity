@@ -86,6 +86,7 @@
 							coneInnerAngle: 90,
 							coneOuterAngle: 180,
 							coneOuterGain: 0.3,
+							staticGainMultiplier: 1,
 						},
 					} satisfies GameState,
 				})
