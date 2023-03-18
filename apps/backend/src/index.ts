@@ -58,7 +58,6 @@ peerServer.on('connection', (client) => {
 		if (typeof event.data !== 'string') return;
 		try {
 			const data = JSON.parse(event.data);
-			console.log(data);
 			if (data.GameState) {
 				state.set(data);
 			}
