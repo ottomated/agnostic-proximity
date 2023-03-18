@@ -94,9 +94,9 @@
 		// const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
 		// osc.start();
 
-		panner = audio.createPanner();
-		panner.panningModel = 'HRTF';
-		panner.distanceModel = 'linear';
+		// panner = audio.createPanner();
+		// panner.panningModel = 'HRTF';
+		// panner.distanceModel = 'linear';
 
 		gain = audio.createGain();
 		if (panner) {
