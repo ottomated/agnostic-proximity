@@ -42,12 +42,13 @@
 		<div>Waiting for microphone access...</div>
 	{:then mic}
 		{#if $audioAllowed}
+			{@const me = $gameState.players.find((p) => p.id === $myId)}
 			<ul class="list-disc">
 				{#each $gameState.players as player (player.id)}
 					{#if player.id === $myId}
 						<MyPlayer {player} {audio} />
 					{:else}
-						<Player {peer} {gameState} {player} mic={mic.stream} {audio} />
+						<Player {peer} {me} {gameState} {player} mic={mic.stream} {audio} />
 					{/if}
 				{/each}
 			</ul>

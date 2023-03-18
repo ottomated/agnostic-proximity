@@ -31,6 +31,7 @@
 
 	export let gameState: Writable<GameState>;
 	export let peer: Peer;
+	export let me: Player | undefined;
 	export let player: Player;
 	export let mic: MediaStream;
 	export let audio: AudioContext;
@@ -92,13 +93,18 @@
 		node = audio.createMediaStreamSource(stream);
 		// const osc = new OscillatorNode(audio, { type: 'sine', frequency: 440 });
 		// osc.start();
-		panner = audio.createPanner();
-		panner.panningModel = 'HRTF';
-		panner.distanceModel = 'linear';
+
+		// panner = audio.createPanner();
+		// panner.panningModel = 'HRTF';
+		// panner.distanceModel = 'linear';
 
 		gain = audio.createGain();
-		node.connect(panner);
-		panner.connect(gain);
+		if (panner) {
+			node.connect(panner);
+			panner.connect(gain);
+		} else {
+			node.connect(gain);
+		}
 		gain.connect(audio.destination);
 		state = 'connected';
 	}
@@ -129,10 +135,28 @@
 	$: if (panner) panner.coneOuterAngle = settings.coneOuterAngle;
 	$: if (panner) panner.coneOuterGain = settings.coneOuterGain;
 
-	$: gain?.gain.setValueAtTime(
-		$audioSettings.deafened ? 0 : player.volume * settings.staticGainMultiplier,
-		audio.currentTime
-	);
+	$: if (panner) {
+		gain?.gain.setValueAtTime(
+			$audioSettings.deafened
+				? 0
+				: player.volume * settings.staticGainMultiplier,
+			audio.currentTime
+		);
+	} else if (me) {
+		const distance = Math.sqrt(
+			Math.pow(player.position.x - me.position.x, 2) +
+				Math.pow(player.position.y - me.position.y, 2) +
+				Math.pow(player.position.z - me.position.z, 2)
+		);
+		const distanceRamp = Math.min(
+			1,
+			Math.max(0, (distance - settings.refDistance) / settings.maxDistance)
+		);
+		gain?.gain.setValueAtTime(
+			$audioSettings.deafened ? 0 : player.volume * distanceRamp,
+			audio.currentTime
+		);
+	}
 
 	function destroy() {
 		call?.close();
