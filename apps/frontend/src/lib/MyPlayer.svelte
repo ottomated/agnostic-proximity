@@ -40,6 +40,7 @@
 <script lang="ts">
 	import { Smile } from 'lucide-svelte';
 	import type { Player } from 'common';
+	import { SMOOTHING } from './audio';
 
 	export let player: Player;
 	export let audio: AudioContext;
@@ -48,7 +49,7 @@
 
 	const setPosition = isModern
 		? (pos: Vector) => {
-				const now = audio.currentTime + 0.1;
+				const now = audio.currentTime + SMOOTHING;
 				audio.listener.positionX.linearRampToValueAtTime(pos.x, now);
 				audio.listener.positionY.linearRampToValueAtTime(pos.y, now);
 				audio.listener.positionZ.linearRampToValueAtTime(pos.z, now);
@@ -59,7 +60,7 @@
 
 	const setOrientation = isModern
 		? (quat: Quaternion) => {
-				const now = audio.currentTime + 0.1;
+				const now = audio.currentTime + SMOOTHING;
 				const [forward, up] = getVectors(quat);
 				audio.listener.forwardX.linearRampToValueAtTime(forward.x, now);
 				audio.listener.forwardY.linearRampToValueAtTime(forward.y, now);

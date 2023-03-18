@@ -1,6 +1,8 @@
 import { readable } from 'svelte/store';
 import { storedWritable } from './stores';
 
+export const SMOOTHING = 0.2;
+
 export const audioSettings = storedWritable('audioSettings', () => ({
 	muted: false,
 	deafened: false,

@@ -24,7 +24,7 @@
 	import type { MediaConnection, Peer } from 'peerjs';
 
 	import { onDestroy, onMount, SvelteComponentTyped } from 'svelte';
-	import { audioSettings, closeStream } from './audio';
+	import { audioSettings, closeStream, SMOOTHING } from './audio';
 	import type { GameState, Player } from 'common';
 	import type { Writable } from 'svelte/store';
 	import { rotateVectorByQuat } from './MyPlayer.svelte';
@@ -113,7 +113,7 @@
 	$: if (panner) {
 		const pos = player.position;
 		const rot = rotateVectorByQuat(forward, player.rotation);
-		const now = audio.currentTime + 0.1;
+		const now = audio.currentTime + SMOOTHING;
 		panner.positionX.linearRampToValueAtTime(pos.x, now);
 		panner.positionY.linearRampToValueAtTime(pos.y, now);
 		panner.positionZ.linearRampToValueAtTime(pos.z, now);
