@@ -29,7 +29,7 @@
 </script>
 
 <main
-	class="bg-slate-900 text-slate-200 h-screen flex flex-col items-center justify-center gap-2"
+	class="bg-slate-900 text-xl text-slate-200 h-screen flex flex-col items-center justify-center gap-2"
 >
 	{#if $users.isLoading}
 		<p class="italic">Loading users...</p>
